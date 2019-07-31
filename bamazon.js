@@ -35,8 +35,9 @@ function storeBuy() {
             name: "productTotal",
             message: "How many units do you want?"
         }
-        // After the prompt, store the user's response in a variable called location.
+        
     ]).then(function (action) {
+
         connection.query("SELECT * FROM products", function (err, res) {
             if (err) throw err;
             var product = (parseInt(action.productId) - 1);
@@ -54,16 +55,16 @@ function storeBuy() {
                         }
                     ],
                     function (error) {
-                        if (error) throw err;
+                        if (error) throw error;
                         console.log("Your total comes out to $" + (parseInt(action.productTotal) * res[product].price).toFixed(2));
+                        connection.end();
+                        return console.log("Thank for for shopping with Bamazon!")
                     }
                 );
-
             }
             else {
                 console.log("We don't have that much in stock!")
             }
-
         });
     });
 }
@@ -71,42 +72,3 @@ function storeBuy() {
 
 
 storeFront();
-
-// function postThis() {
-//    inquirer.prompt([
-//        {
-//            type: "input",
-//            name: "postItem",
-//            message: "Name the item you want to post"
-//        },
-//        {
-//            type: "input",
-//            name: "postCat",
-//            message: "Name the category of the item you're posting"
-//        },
-//        {
-//            type: "input",
-//            name: "startingBid",
-//            message: "What is the lowest amount of money you'd accept for this item?"
-//        },
-//    ]).then(function (action) {
-//        connection.query("INSERT INTO auctions SET ?",
-//            {
-//                item: action.postItem,
-//                category: action.postCat,
-//                highest_bid: action.startingBid,
-//            },
-//            function (err, res) {
-//                if (err) throw err;
-//                console.log(res.affectedRows + " item inserted!\n");
-//                connection.end();
-//                mainInq();
-//            })
-//        })
-//    };
-// function exit() {
-//    return console.log("Thank for for shopping with Bamazon")
-// };
-
-
-// connection.end();
