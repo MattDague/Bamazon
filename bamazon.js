@@ -2,7 +2,7 @@ require("dotenv").config();
 var pw = require("./keys.js");
 var inquirer = require("inquirer");
 var mysql = require("mysql");
-// var password = new Password(keys.sql);
+
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
