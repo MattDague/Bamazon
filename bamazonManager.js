@@ -11,18 +11,13 @@ var connection = mysql.createConnection({
     database: "bamazon_db"
 });
 
-// function storeFront() {
-//     connection.query("SELECT * FROM products", function (err, res) {
-//         if (err) throw err;
-//     })
-// }
-
 function managerView() {
+    console.log("")
     inquirer.prompt(
     {
         type: "list",
         name: "managerList",
-        message: "What would you like to do today Mr. Manager?",
+        message: "What would you like to do today Mr. Manager?\n",
         choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product", "EXIT"]
 
     }).then(function(action){
@@ -67,6 +62,55 @@ function viewLow(){
         }
         managerView();
     });
+}
+
+function addInventory(){
+    connection.query("SELECT * FROM products", function (err, res) {
+        if (err) throw err;
+        for (var i = 0; i < res.length; i++) {
+            console.log(res[i].item_id + "  " + res[i].product_name + "  " + res[i].stock_quantity);
+            
+        }
+        console.log(" ")
+        inquirer.prompt([
+            {
+                type: "input",
+                name: "productId",
+                message: "Enter the ID for the product we need more of!"
+            },
+            {
+                type: "input",
+                name: "productTotal",
+                message: "How many should we order?"
+            }
+    
+        ]).then(function (action) {
+    console.log(" ")
+    var product = (parseInt(action.productId) - 1);
+            if ((action.productId > res.length) || (action.productId < 1)) {
+                console.log("Not a real ID, try again!");
+                managerView();
+            }
+            else {
+                connection.query(
+                    "UPDATE products SET ? WHERE ?",
+                    [
+                        {
+                            stock_quantity: (parseInt(res[product].stock_quantity) + parseInt(action.productTotal))
+                        },
+                        {
+                            item_id: action.productId
+                        }
+                    ]
+                )
+                managerView();
+            }   
+        })
+    });
+}
+
+function addProduct(){
+    
 }
 
 function exit(){
