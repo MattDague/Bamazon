@@ -2,6 +2,8 @@ require("dotenv").config();
 var pw = require("./keys.js");
 var inquirer = require("inquirer");
 var mysql = require("mysql");
+var chalk = require('chalk');
+var Table = require('cli-table-redemption');
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -11,12 +13,20 @@ var connection = mysql.createConnection({
     database: "bamazon_db"
 });
 
+
 function storeFront() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
+        var table = new Table({
+            head: [chalk.cyanBright('Item ID'), chalk.cyanBright('Product Name'), chalk.cyanBright('Department'), chalk.cyanBright('price'), chalk.cyanBright('stock')],
+        });
+        
         for (var i = 0; i < res.length; i++) {
-            console.log(res[i].item_id + "  " + res[i].product_name + "  " + res[i].department_name + "  " + res[i].price + "  " + res[i].stock_quantity);
+            newRow = []
+            newRow.push(res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity)
+            table.push(newRow);
         }
+        console.log(table.toString());
         storeBuy(res);
     });
 };

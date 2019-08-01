@@ -2,6 +2,8 @@ require("dotenv").config();
 var pw = require("./keys.js");
 var inquirer = require("inquirer");
 var mysql = require("mysql");
+var chalk = require('chalk');
+var Table = require('cli-table-redemption');
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -45,9 +47,16 @@ function managerView() {
 function viewProduct(){
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
+        var table = new Table({
+            head: [chalk.cyanBright('Item ID'), chalk.cyanBright('Product Name'), chalk.cyanBright('Department'), chalk.cyanBright('price'), chalk.cyanBright('stock')],
+        });
+        
         for (var i = 0; i < res.length; i++) {
-            console.log(res[i].item_id + "  " + res[i].product_name + "  " + res[i].department_name + "  " + res[i].price + "  " + res[i].stock_quantity);
+            newRow = []
+            newRow.push(res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity)
+            table.push(newRow);
         }
+        console.log(table.toString());
         managerView();
     });
 };
@@ -55,22 +64,43 @@ function viewProduct(){
 function viewLow(){
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
+        var table = new Table({
+            head: [chalk.cyanBright('Item ID'), chalk.cyanBright('Product Name'), chalk.cyanBright('Department'), chalk.cyanBright('price'), chalk.cyanBright('stock')],
+        });
         for (var i = 0; i < res.length; i++) {
             if (res[i].stock_quantity < 5){
-            console.log(res[i].item_id + "  " + res[i].product_name + "  " + res[i].department_name + "  " + res[i].price + "  " + res[i].stock_quantity);
+                newRow = []
+                newRow.push(res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity)
+                table.push(newRow);
             }
         }
+        if(table.length > 0) {
+        console.log(table.toString());
         managerView();
+        }
+        else{
+            console.log("\nAll products are sufficiently stocked!")
+            managerView();
+        }
+
+       
     });
 }
 
 function addInventory(){
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
-        for (var i = 0; i < res.length; i++) {
-            console.log(res[i].item_id + "  " + res[i].product_name + "  " + res[i].stock_quantity);
+            var table = new Table({
+                head: [chalk.cyanBright('Item ID'), chalk.cyanBright('Product Name'), chalk.cyanBright('Department'), chalk.cyanBright('stock')],
+            });
             
-        }
+            for (var i = 0; i < res.length; i++) {
+                newRow = []
+                newRow.push(res[i].item_id, res[i].product_name, res[i].department_name, res[i].stock_quantity)
+                table.push(newRow);
+            };
+            
+            console.log(table.toString());
         console.log(" ")
         inquirer.prompt([
             {
@@ -103,6 +133,7 @@ function addInventory(){
                         }
                     ]
                 )
+                console.log("\nYou got it! We will order " + action.productTotal + "!");
                 managerView();
             }   
         })
@@ -144,7 +175,6 @@ function addProduct(){
             })
             managerView();
         }
-
         else{
             console.log("Please enter a real price/stock quantity!")
             managerView();
@@ -156,6 +186,5 @@ function addProduct(){
 function exit(){
 return connection.end();
 };
-
 
 managerView();
