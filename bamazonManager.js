@@ -110,18 +110,52 @@ function addInventory(){
 }
 
 function addProduct(){
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "product_name",
+            message: "What product would you like to add?"
+        },
+        {
+            type: "input",
+            name: "department_name",
+            message: "What department is that product in?"
+        },
+        {
+            type: "input",
+            name: "price",
+            message: "How much does it cost?"
+        },
+        {
+            type: "input",
+            name: "stock_quantity",
+            message: "How many should we order to start?"
+        },
+    ]).then(function(action){
+
+       if((Number.isInteger(parseInt(action.price))) && (Number.isInteger(parseInt(action.stock_quantity)))){
+        connection.query(
+            "INSERT INTO products SET ?",
+            {
+              product_name: action.product_name,
+              department_name: action.department_name,
+              price: action.price,
+              stock_quantity: action.stock_quantity
+            })
+            managerView();
+        }
+
+        else{
+            console.log("Please enter a real price/stock quantity!")
+            managerView();
+        }
+    })
     
 }
 
 function exit(){
 return connection.end();
 };
-
-
-
-
-
-
 
 
 managerView();
