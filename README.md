@@ -24,7 +24,7 @@ How To Use
 
 Provided the proper NPM depencies are installed simply enter:
 
-<node bamazon.js>   or    <node bamazonManager.js>
+"node bamazon.js"    or    "node bamazonManager.js"
 
 For the first option you are immediately presented with an option to enter a product Id of your choosing. Once you enter a valid ID for a product you may then indicated how many you want. If you order an amount less than or equal to the stock quantity and an order will be placed and you will be given a price confirmation!
 
