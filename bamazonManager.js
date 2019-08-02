@@ -74,7 +74,7 @@ function viewLow(){
         if (err) throw err;
         //variable for table creation
         var table = new Table({
-            head: [chalk.cyanBright('Item ID'), chalk.cyanBright('Product Name'), chalk.cyanBright('Department'), chalk.cyanBright('price'), chalk.cyanBright('stock')],
+            head: [chalk.cyanBright('Item ID'), chalk.cyanBright('Product Name'), chalk.cyanBright('Department'), chalk.cyanBright('Price'), chalk.cyanBright('Stock')],
         });
         for (var i = 0; i < res.length; i++) {
             //checks for each item if stock quantity is less than 5 and pushes them to table
@@ -104,7 +104,7 @@ function addInventory(){
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
             var table = new Table({
-                head: [chalk.cyanBright('Item ID'), chalk.cyanBright('Product Name'), chalk.cyanBright('Department'), chalk.cyanBright('stock')],
+                head: [chalk.cyanBright('Item ID'), chalk.cyanBright('Product Name'), chalk.cyanBright('Department'), chalk.cyanBright('Stock')],
             });
             
             //display all products for inventory check

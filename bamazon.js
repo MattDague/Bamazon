@@ -22,7 +22,7 @@ function storeFront() {
         if (err) throw err;
         //table creation
         var table = new Table({
-            head: [chalk.cyanBright('Item ID'), chalk.cyanBright('Product Name'), chalk.cyanBright('Department'), chalk.cyanBright('price'), chalk.cyanBright('stock')],
+            head: [chalk.cyanBright('Item ID'), chalk.cyanBright('Product Name'), chalk.cyanBright('Department'), chalk.cyanBright('Price'), chalk.cyanBright('Stock')],
         });
         //loop pushes all database items into arrays, then pushes those arrays into table array
         for (var i = 0; i < res.length; i++) {
